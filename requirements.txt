@@ -1,0 +1,5 @@
+mlagents-envs==0.30.0
+pip-chill==1.0.1
+torchsummary==1.5.1
+torchvision==0.14.0
+torchviz==0.0.2
