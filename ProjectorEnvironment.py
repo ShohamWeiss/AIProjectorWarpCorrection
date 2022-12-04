@@ -9,7 +9,7 @@ class ProjectorEnvironment:
   def __init__(self, imageFilePath):
     if (platform.system() == "Linux"):
       self.folder = "linux_exe"
-      self.file_name = "ProjEnv.x86_64"
+      self.file_name = "ProjectorEnvironment.x86_64"
     if (platform.system() == "Windows"):
       self.folder = "windows_exe"
       self.file_name = "ProjectorEnvironment.exe"
