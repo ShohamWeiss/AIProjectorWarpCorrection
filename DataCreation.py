@@ -1,8 +1,9 @@
 
 from ProjectorEnvironment import ProjectorEnvironment
+import torchvision
 
 env = ProjectorEnvironment("sichar.png")
-env.newImage("balloons.png")
+env.NewImage("balloons.png")
 env.newRandomWall()
-env.snapshot()
+env.Snapshot()
 env.close()

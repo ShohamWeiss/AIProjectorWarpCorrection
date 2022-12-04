@@ -2,11 +2,21 @@ import datetime
 import os
 from mlagents_envs.environment import UnityEnvironment, ActionTuple
 import numpy as np
-import time
 import json
+import platform
 
 class ProjectorEnvironment:
   def __init__(self, imageFilePath):
+    if (platform.system() == "Linux"):
+      self.folder = "linux_exe"
+      self.file_name = "ProjectorEnvironment.x86_64"
+    if (platform.system() == "Windows"):
+      self.folder = "windows_exe"
+      self.file_name = "ProjectorEnvironment.exe"
+    if (platform.system() == "Darwin"):
+      # throw an unsupported exception
+      raise Exception("MacOS is not supported")
+    
     self.flatwall = {
       "bottomLeft": 0,
       "bottomRight": 0,
@@ -19,12 +29,12 @@ class ProjectorEnvironment:
       "topMiddle": 0
     }
     self.SetWall(self.flatwall)
-    self.env = UnityEnvironment(file_name="ProjectorEnvironment.exe")
+    self.env = UnityEnvironment(file_name=f"{self.folder}/{self.file_name}")
     self.env.reset()
     self.behavior_name = list(self.env.behavior_specs)[0]
     self.currFolder = ""
     self.wall = self.flatwall
-    self.newImage(imageFilePath)
+    self.NewImage(imageFilePath, new_class=True)
     
   def about(self):
     # get groups
@@ -40,7 +50,7 @@ class ProjectorEnvironment:
       for action, branch_size in enumerate(spec.action_spec.discrete_branches):
         print(f"Action number {action} has {branch_size} different options")
 
-  def snapshot(self, filename=None):
+  def Snapshot(self, filename=None):
     if (filename is None):
       filename = str(datetime.datetime.utcnow().timestamp()) + ".png"
     actions = np.array([[1,0,0]])
@@ -50,12 +60,12 @@ class ProjectorEnvironment:
     self.env.step()
     # copy snapshot to folder with filename
     with open(f"{self.currFolder}/{filename}", "wb") as f:
-      with open("snapshot.png", "rb") as f2:
+      with open(f"{self.folder}/snapshot.png", "rb") as f2:
         f.write(f2.read())
     
-  def newImage(self, filepath):
+  def NewImage(self, filepath, new_class = False):
     # overwrite currentImage.png
-    with open("currentImage.png", "wb") as f:
+    with open(f"{self.folder}/currentImage.png", "wb") as f:
       with open(filepath, "rb") as f2:
         f.write(f2.read())
 
@@ -65,6 +75,10 @@ class ProjectorEnvironment:
     self.env.set_actions(self.behavior_name, action_tuple)
     self.env.step()
     
+    if (new_class):
+      self.NewFolder(filepath)
+    
+  def NewFolder(self, filepath):
     self.currFolder = filepath.split('.')[0]
     if not os.path.exists(self.currFolder):
       # create a folder for the image
@@ -74,17 +88,16 @@ class ProjectorEnvironment:
       previousWall = self.wall
       # take the flat wall snapshot
       self.FlattenWall()
-      self.snapshot("label.png")
+      self.Snapshot("label.png")
       # return to previous wall
       self.SetWall(previousWall)
-    
 
   def SetWall(self,wall):
     # wall to json
     self.wall = wall
     wallJson = json.dumps(wall)
     # save to file
-    with open("wallPositions.json", "w") as f:
+    with open(f"{self.folder}/wallPositions.json", "w") as f:
       f.write(wallJson)
     actions = np.array([[0,0,1]])
     action_tuple = ActionTuple()
