@@ -92,7 +92,7 @@ class ProjectorEnvironment:
       # return to previous wall
       self.SetWall(previousWall)
 
-  def SetWall(self,wall):
+  def SetWall(self,wall: dict):
     # wall to json
     self.wall = wall
     wallJson = json.dumps(wall)
