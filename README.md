@@ -1,3 +1,4 @@
+![Alt text](https://github.com/ShohamWeiss/AIProjectorWarpCorrection/blob/0f04af636beccb4e8029a9782ae1a5e35e1432fe/Screenshot%202022-12-13%20191906.jpg)
 # AI Projector Warp Correction Environment
 Projector Python Environment to create data and train deep learning models. The environment consists of a projector, a wall and a camera. The wall is made out of a 3x3 grid of blocks that can be aranged via the sdk to any orientation to create a non-flat surface to project onto. The sdk also allows for setting an image to project onto the wall and to take a snapshot of the projected image.
 
@@ -6,6 +7,8 @@ A unity environment that's wrapped by a python library to make a data creation s
 
 ## How to use
 ```python
+from ProjectorEnvironment import ProjectorEnvironment
+
 # Create an environment
 #    this will use myImage.png as initial image to project
 #    it will create a folder with the name of the image and take a snapshot of the flat wall
