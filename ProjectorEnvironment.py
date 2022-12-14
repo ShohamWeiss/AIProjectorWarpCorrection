@@ -107,7 +107,7 @@ class ProjectorEnvironment:
       self.env.set_actions(self.behavior_name, action_tuple)
       self.env.step()
 
-  def newRandomWall(self):
+  def NewRandomWall(self):
     nums = [np.random.rand() for x in range(9)]
     wall = {
       "bottomLeft": nums[0],
